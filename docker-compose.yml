@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  php:
+    image: php:7.2-fpm
+    build:
+      context: ./application
+      target: application_php
+#    env_file:
+#      - ./application/.env
+    volumes:
+      - ./application:/var/www/application:rw,cached
+
+  nginx:
+    image: nginx:latest
+    build:
+      context: ./application
+      target: application_nginx
+    depends_on:
+      - php
+    volumes:
+      - ./application/public:/var/www/application/public:ro
+    ports:
+      - "80:80"
